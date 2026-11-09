@@ -5326,6 +5326,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Fog_Main
       objectReference: {fileID: 0}
+    - target: {fileID: 17134013915065663, guid: e3dadcb325e3ff6499f8121888d77500, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1045969250250461448, guid: e3dadcb325e3ff6499f8121888d77500, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -6202,7 +6206,7 @@ MonoBehaviour:
   localAxis: {x: 0, y: -1, z: 0}
   resetSpeed: 5
   followAngleThreshold: 45
-  maxFollowDistance: 0.011
+  maxFollowDistance: 0.01
 --- !u!114 &744101305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8774,7 +8778,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &928776662
 MeshCollider:
   m_ObjectHideFlags: 0

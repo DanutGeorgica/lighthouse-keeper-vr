@@ -27,3 +27,30 @@
   - fuel jerrycan - https://polyfork.dev/asset/fuel-jerrycan-6f1d85
 
 all of these were put on the main scene for graybox testing purposes.
+
+## Week 6 additions
+
+video: https://www.youtube.com/watch?v=zrrIB1fh8L4
+
+- objects grayboxing was mostly done last week
+- added skybox
+- added ocean shader
+- added rain particles
+- remade some of the models (can be found in assets -> blender for the .blend files, or assets -> models -> interactables for the .fbx), mostly ai generated with some manual edits:
+  - lantern
+  - compass
+  - power box
+  - lever
+  - button
+  - radio with a few buttons on it
+
+- added interactions for the models:
+  - for the lantern: can grab by the handle and have the rest of it spin around as the player moves
+  - for the compass: can be grabbed, always points in a certain configurable direction
+  - for the power box: can grab the panel handle and open/close it
+  - for the lever: grabbable handle, can be smoothly moved up/down
+  - for the button: smooth button that uses poke
+  - for the radio:
+    - switch that uses physical hitbox of the controllers to be hit up/down (kind of clunky atleast without a vr headset), the controllers have sphere colliders that are set on a specific layer to interact with the switch
+    - button that can be smoothly poked (same as the button mentioned before)
+    - knob switch that can be grabbed and set on 7 levels based on controller rotation
