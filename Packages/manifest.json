@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.cqf.urpvolumetricfog": "file:C:/Users/User04/Desktop/Unity-URP-Volumetric-Light-main",
     "com.unity.ai.navigation": "2.0.14",
     "com.unity.cloud.gltfast": "6.20.0",
     "com.unity.collab-proxy": "2.13.6",
