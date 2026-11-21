@@ -22,6 +22,10 @@ public class KnobEvents : MonoBehaviour
     [SerializeField] private float currentValue;
     [SerializeField] private int currentPosition;
 
+    [Header("Position Configuration")]
+    [SerializeField] private float angleIncrement = 30f;
+    [SerializeField] private bool reversePositionOrder = false;
+
     private float previousValue;
     private int previousPosition;
 
@@ -38,8 +42,7 @@ public class KnobEvents : MonoBehaviour
     {
         if (knob == null)
         {
-            Debug.LogError("KnobEvents: No XRKnob component found!",this);
-
+            Debug.LogError("KnobEvents: No XRKnob component found!", this);
             enabled = false;
             return;
         }
@@ -76,32 +79,26 @@ public class KnobEvents : MonoBehaviour
                 currentPosition = newPosition;
 
                 onPositionChanged?.Invoke(currentPosition);
-
-                //Debug.Log($"{gameObject.name}: Knob position changed to {currentPosition}",this);
             }
         }
     }
 
-    private int CalculatePosition(float value)
+    private int CalculatePosition(float normalizedValue)
     {
-        if (knob == null ||
-            knob.maxAngle <= knob.minAngle ||
-            knobAngleIncrement <= 0f)
-        {
+        if (knob == null || angleIncrement <= 0f || knob.maxAngle <= knob.minAngle)
             return -1;
-        }
 
         float angleRange = knob.maxAngle - knob.minAngle;
+        float angleFromMin = Mathf.Clamp01(normalizedValue) * angleRange;
 
-        float angle = Mathf.Clamp01(value) * angleRange;
+        int positionFromMin = Mathf.RoundToInt(angleFromMin / angleIncrement);
+        int totalSteps = Mathf.RoundToInt(angleRange / angleIncrement);
 
-        return Mathf.RoundToInt(angle / knobAngleIncrement);
+        if (reversePositionOrder)
+            return totalSteps - positionFromMin;
+
+        return positionFromMin;
     }
-
-    private float knobAngleIncrement => angleIncrement;
-
-    [Header("Position Configuration")]
-    [SerializeField] private float angleIncrement = 30f;
 
     private void OnValidate()
     {
