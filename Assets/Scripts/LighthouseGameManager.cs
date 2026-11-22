@@ -117,9 +117,10 @@ public class LighthouseGameManager : MonoBehaviour
 
     private bool radioResponseAlreadySubmitted;
 
-    // Stores the currently distorted message.
+    // Stores the currently distorted message and response options.
     // Prevents random characters from changing when unrelated UI updates occur.
     private string displayedRadioMessage = "";
+    private string[] displayedRadioResponseOptions = Array.Empty<string>();
 
     // =========================================================
     // RADIO MESSAGE QUEUE
@@ -418,12 +419,8 @@ public class LighthouseGameManager : MonoBehaviour
 
         CurrentRadioFrequency = frequency;
 
-        // Regenerate distortion only when frequency changes.
-        if (!string.IsNullOrEmpty(CurrentRadioMessage))
-        {
-            displayedRadioMessage =
-                GetDistortedMessage(CurrentRadioMessage);
-        }
+        // Regenerate all distorted radio text only when frequency changes.
+        RegenerateDisplayedRadioText();
 
         UpdateRadioUI();
 
@@ -535,9 +532,8 @@ public class LighthouseGameManager : MonoBehaviour
         SelectedRadioResponseIndex = -1;
         radioResponseAlreadySubmitted = false;
 
-        // Generate the distorted version once.
-        displayedRadioMessage =
-            GetDistortedMessage(CurrentRadioMessage);
+        // Generate distorted versions of the message and its responses.
+        RegenerateDisplayedRadioText();
 
         UpdateRadioUI();
 
@@ -562,6 +558,7 @@ public class LighthouseGameManager : MonoBehaviour
         RequiredRadioFrequency = 0;
 
         displayedRadioMessage = "";
+        displayedRadioResponseOptions = Array.Empty<string>();
 
         CurrentRadioResponseOptions = Array.Empty<string>();
         SelectedRadioResponseIndex = -1;
@@ -684,6 +681,29 @@ public class LighthouseGameManager : MonoBehaviour
     // =========================================================
     // RADIO MESSAGE DISTORTION
     // =========================================================
+
+    private void RegenerateDisplayedRadioText()
+    {
+        if (string.IsNullOrEmpty(CurrentRadioMessage))
+        {
+            displayedRadioMessage = "";
+            displayedRadioResponseOptions = Array.Empty<string>();
+            return;
+        }
+
+        // Generate the incoming message's distorted display text.
+        displayedRadioMessage = GetDistortedMessage(CurrentRadioMessage);
+
+        // Generate distorted display text for each response option.
+        displayedRadioResponseOptions =
+            new string[CurrentRadioResponseOptions.Length];
+
+        for (int i = 0; i < CurrentRadioResponseOptions.Length; i++)
+        {
+            displayedRadioResponseOptions[i] =
+                GetDistortedMessage(CurrentRadioResponseOptions[i]);
+        }
+    }
 
     private string GetDistortedMessage(string message)
     {
@@ -826,9 +846,10 @@ public class LighthouseGameManager : MonoBehaviour
                 hasMessage &&
                 i < CurrentRadioResponseOptions.Length;
 
-            optionText.text = optionExists
-                ? CurrentRadioResponseOptions[i]
-                : "";
+            optionText.text =
+                optionExists && i < displayedRadioResponseOptions.Length
+                    ? displayedRadioResponseOptions[i]
+                    : "";
 
             optionText.color =
                 i == SelectedRadioResponseIndex && hasMessage
