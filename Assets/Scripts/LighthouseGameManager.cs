@@ -78,6 +78,7 @@ public class LighthouseGameManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool enableDebugLogs = true;
+    [SerializeField] private bool queueMockRadioMessagesOnStart = true;
 
     // =========================================================
     // GAMEPLAY STATES
@@ -195,6 +196,12 @@ public class LighthouseGameManager : MonoBehaviour
 
         // Always display the radio interface.
         UpdateRadioUI();
+
+        // Queue test transmissions.
+        if (queueMockRadioMessagesOnStart)
+        {
+            QueueMockRadioMessages();
+        }
     }
 
     private void OnDestroy()
@@ -829,4 +836,53 @@ public class LighthouseGameManager : MonoBehaviour
                     : normalResponseColor;
         }
     }
+
+
+    private void QueueMockRadioMessages()
+    {
+        // MESSAGE 1 — Required frequency: 5
+        ReceiveRadioMessage(
+            "This is fishing vessel 04. We are approaching the western channel. Visibility is deteriorating. Requesting navigation instructions.",
+            5,
+            new string[]
+            {
+            "Proceed through the western channel.",
+            "Change course to the eastern channel.",
+            "Remain outside the channel until visibility improves."
+            }
+        );
+
+        // MESSAGE 2 — Required frequency: 1
+        ReceiveRadioMessage(
+            "Lighthouse keeper, this is cargo vessel 12. We have spotted unusual debris near the southern reef. Is the passage safe?",
+            1,
+            new string[]
+            {
+            "Continue at reduced speed.",
+            "Turn around and use the northern route.",
+            "Proceed carefully. The southern passage is clear."
+            }
+        );
+
+        // MESSAGE 3 — Required frequency: 3
+        ReceiveRadioMessage(
+            "This is coastal patrol. We are requesting confirmation that the lighthouse beacon is operational.",
+            3,
+            new string[]
+            {
+            "Beacon is operational.",
+            "Beacon is currently malfunctioning.",
+            "Unable to confirm beacon status."
+            }
+        );
+
+        if (enableDebugLogs)
+        {
+            Debug.Log(
+                "[GameManager] Three mock radio transmissions queued.",
+                this
+            );
+        }
+    }
+
 }
