@@ -1,0 +1,1591 @@
+<!doctype html>
+<!-- Generated from StoreMedia/Source/documentation.html by build.js. Online: https://hardartcore.com/unity_assets/shoreline/documentation/ -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShoreLine Documentation</title>
+<style>/*
+ * Asset documentation template (layout: asset_documentation).
+ * Also the look of every other page on the site (head.html loads it everywhere).
+ * Everything is scoped under .adoc so it cannot leak into the rest of the site.
+ * Components: see _templates/asset-documentation.html for copy-paste examples.
+ * The hub pages (.hs, assets/css/hub.css) share these tokens: warm canvas, Nunito, yellow highlight.
+ */
+
+
+
+
+.adoc, .hs {
+    --adoc-ink: #14161F;
+    --adoc-text: rgba(20, 22, 31, .82);
+    --adoc-muted: #6b6f7b;
+    --adoc-line: #E9E5DB;
+    --adoc-soft: #F3F0E8;
+    --adoc-yellow: #FFD66B;
+    --adoc-yellow-soft: #FFF4D1;
+    --adoc-shadow: 0 1px 2px rgba(20, 22, 31, .06), 0 10px 26px rgba(20, 22, 31, .08);
+    --adoc-shadow-hover: 0 24px 44px rgba(20, 22, 31, .18);
+    --adoc-blue: #3d61fd;
+    --adoc-blue-soft: #eef1ff;
+    --adoc-green: #1f9d57;
+    --adoc-green-soft: #e8f6ee;
+    --adoc-amber: #b86e00;
+    --adoc-amber-soft: #fff3e0;
+    --adoc-red: #d23b45;
+    --adoc-red-soft: #fdecee;
+    --adoc-radius: 22px;
+    --adoc-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 2.5rem 0 7rem; /* bottom: room for the fixed navigation bar */
+    font-family: Nunito, system-ui, sans-serif;
+    color: var(--adoc-text);
+}
+
+.adoc h1, .adoc h2, .adoc h3, .adoc h4 { font-family: inherit; letter-spacing: -.02em; }
+
+/* The tilted yellow marker behind a title's key word. */
+.adoc-hl {
+    display: inline-block;
+    background: var(--adoc-yellow);
+    color: var(--adoc-ink);
+    padding: 0 .28em .04em;
+    border-radius: .3em;
+    transform: rotate(-2deg);
+}
+
+/* ---- Hero ------------------------------------------------------------- */
+
+.adoc-crumbs {
+    font-size: .85rem;
+    color: var(--adoc-muted);
+    margin-bottom: 1.25rem;
+}
+
+.adoc-crumbs a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.adoc-crumbs a:hover {
+    color: var(--adoc-ink);
+}
+
+.adoc-crumbs span[aria-hidden] {
+    margin: 0 .45rem;
+    opacity: .6;
+}
+
+.adoc-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 1rem 0 .5rem;
+    margin-bottom: 1.5rem;
+}
+
+.adoc-eyebrow {
+    display: inline-block;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    background: var(--adoc-yellow);
+    color: var(--adoc-ink);
+    margin-bottom: .9rem;
+}
+
+.adoc-hero h1 {
+    font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -.03em;
+    color: var(--adoc-ink);
+    margin: 0 0 1rem;
+    line-height: 1.08;
+}
+
+.adoc-lead {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--adoc-muted);
+    max-width: 40rem;
+    margin-bottom: 1.6rem;
+}
+
+.adoc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.4rem;
+}
+
+.adoc-meta li {
+    font-size: .8rem;
+    padding: .3rem .75rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--adoc-line);
+    color: var(--adoc-muted);
+}
+
+.adoc-meta strong {
+    color: var(--adoc-ink);
+    font-weight: 700;
+}
+
+.adoc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+}
+
+.adoc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 700;
+    padding: .75rem 1.35rem;
+    border-radius: 999px;
+    text-decoration: none;
+    border: 1.5px solid var(--adoc-line);
+    background: #fff;
+    color: var(--adoc-ink);
+    cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease;
+}
+
+.adoc-btn:hover {
+    border-color: var(--adoc-ink);
+    color: var(--adoc-ink);
+    transform: translateY(-2px);
+}
+
+.adoc-btn.primary {
+    background: var(--adoc-ink);
+    border-color: var(--adoc-ink);
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(20, 22, 31, .25);
+}
+
+.adoc-btn.primary:hover {
+    color: #fff;
+}
+
+.adoc-btn:focus-visible {
+    outline: 3px solid var(--adoc-yellow);
+    outline-offset: 3px;
+}
+
+.adoc-hero-img {
+    width: 300px;
+    max-width: 100%;
+    border-radius: var(--adoc-radius);
+    box-shadow: var(--adoc-shadow-hover);
+}
+
+/* ---- Body: sidebar + content ------------------------------------------ */
+
+.adoc-body {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+}
+
+.adoc-sidebar {
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--adoc-line) transparent;
+    font-size: .88rem;
+}
+
+.adoc-toc-box summary {
+    list-style: none;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--adoc-muted);
+    margin-bottom: .75rem;
+    cursor: default;
+}
+
+.adoc-toc-box summary::-webkit-details-marker {
+    display: none;
+}
+
+#adoc-toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#adoc-toc ul ul {
+    padding-left: .85rem;
+    margin: .15rem 0 .35rem;
+}
+
+#adoc-toc a {
+    display: block;
+    padding: .28rem .7rem;
+    border-left: 3px solid var(--adoc-line);
+    color: var(--adoc-muted);
+    text-decoration: none;
+    line-height: 1.35;
+}
+
+#adoc-toc ul ul a {
+    font-size: .82rem;
+}
+
+#adoc-toc a:hover {
+    color: var(--adoc-ink);
+}
+
+#adoc-toc a.active {
+    color: var(--adoc-ink);
+    font-weight: 700;
+    border-left-color: var(--adoc-yellow);
+    background: linear-gradient(90deg, var(--adoc-yellow-soft), rgba(255, 255, 255, 0));
+}
+
+/* ---- Content typography ----------------------------------------------- */
+
+.adoc-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    min-width: 0;
+}
+
+.adoc-content > * + * {
+    margin-top: 1rem;
+}
+
+.adoc-content h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--adoc-ink);
+    margin: 3.5rem 0 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--adoc-line);
+    scroll-margin-top: 1.5rem;
+}
+
+.adoc-content > h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.adoc-content h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--adoc-ink);
+    margin: 2.2rem 0 .6rem;
+    scroll-margin-top: 1.5rem;
+}
+
+.adoc-content h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--adoc-ink);
+    margin: 1.5rem 0 .4rem;
+}
+
+.adoc-content .adoc-anchor {
+    margin-left: .45rem;
+    color: var(--adoc-muted);
+    text-decoration: none;
+    box-shadow: none;
+    opacity: 0;
+    transition: opacity .15s;
+}
+
+.adoc-content h2:hover .adoc-anchor,
+.adoc-content h3:hover .adoc-anchor,
+.adoc-content .adoc-anchor:focus {
+    opacity: 1;
+}
+
+.adoc-content a:not(.adoc-btn):not(.adoc-anchor):not(.adoc-card) {
+    color: inherit;
+    text-decoration: none;
+    box-shadow: inset 0 -2px 0 var(--adoc-yellow), 0 2px 0 var(--adoc-yellow);
+}
+
+.adoc-content ul,
+.adoc-content ol {
+    padding-left: 1.4rem;
+}
+
+.adoc-content li + li {
+    margin-top: .3rem;
+}
+
+.adoc-content img {
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+.adoc-content :not(pre) > code {
+    font-family: var(--adoc-mono);
+    font-size: .86em;
+    padding: .12em .4em;
+    border-radius: 6px;
+    background: var(--adoc-soft);
+    border: 1px solid var(--adoc-line);
+    color: #b3226b;
+    word-break: break-word;
+}
+
+.adoc-content kbd {
+    font-family: var(--adoc-mono);
+    font-size: .8em;
+    padding: .15em .45em;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #d5d6dc;
+    border-bottom-width: 2px;
+    color: var(--adoc-ink);
+}
+
+/* "Tools › HardArtcore › Window" style menu paths. */
+.adoc-menu {
+    display: inline;
+    font-weight: 700;
+    color: var(--adoc-ink);
+    background: var(--adoc-blue-soft);
+    padding: .1em .45em;
+    border-radius: 6px;
+    white-space: normal;
+}
+
+/* ---- Code blocks ------------------------------------------------------ */
+
+.adoc-content pre {
+    position: relative;
+    margin: 1.2rem 0;
+    padding: 1.1rem 1.2rem;
+    border-radius: 12px;
+    background: var(--adoc-soft);
+    border: 1px solid var(--adoc-line);
+    overflow-x: auto;
+    font-size: .85rem;
+    line-height: 1.55;
+}
+
+.adoc-content pre code {
+    font-family: var(--adoc-mono);
+    background: none !important; /* highlight.js theme background */
+    padding: 0 !important;
+}
+
+.adoc-code {
+    margin: 1.2rem 0;
+}
+
+.adoc-code figcaption {
+    font-family: var(--adoc-mono);
+    font-size: .75rem;
+    color: var(--adoc-muted);
+    padding: .45rem 1rem;
+    border: 1px solid var(--adoc-line);
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+    background: #fff;
+}
+
+.adoc-code pre {
+    margin: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.adoc-copy {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .25rem .6rem;
+    border-radius: 8px;
+    border: 1px solid var(--adoc-line);
+    background: #fff;
+    color: var(--adoc-muted);
+    opacity: 0;
+    transition: opacity .15s;
+    cursor: pointer;
+}
+
+.adoc-content pre:hover .adoc-copy,
+.adoc-copy:focus {
+    opacity: 1;
+}
+
+/* ---- Tables ----------------------------------------------------------- */
+
+.adoc-table {
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    border: 1px solid var(--adoc-line);
+    border-radius: 12px;
+}
+
+.adoc-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+}
+
+.adoc-table th,
+.adoc-table td {
+    padding: .7rem .9rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--adoc-line);
+}
+
+.adoc-table th {
+    font-size: .75rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--adoc-muted);
+    background: var(--adoc-soft);
+    white-space: nowrap;
+}
+
+.adoc-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.adoc-table td:first-child code {
+    white-space: nowrap;
+}
+
+/* ---- Callouts --------------------------------------------------------- */
+
+.adoc-callout {
+    margin: 1.4rem 0;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--adoc-blue);
+    background: var(--adoc-blue-soft);
+    font-size: .95rem;
+}
+
+.adoc-callout > :last-child {
+    margin-bottom: 0;
+}
+
+.adoc-callout-title {
+    display: block;
+    font-weight: 800;
+    font-size: .8rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: .3rem;
+    color: var(--adoc-blue);
+}
+
+.adoc-callout.tip { border-color: var(--adoc-green); background: var(--adoc-green-soft); }
+.adoc-callout.tip .adoc-callout-title { color: var(--adoc-green); }
+.adoc-callout.warning { border-color: var(--adoc-amber); background: var(--adoc-amber-soft); }
+.adoc-callout.warning .adoc-callout-title { color: var(--adoc-amber); }
+.adoc-callout.danger { border-color: var(--adoc-red); background: var(--adoc-red-soft); }
+.adoc-callout.danger .adoc-callout-title { color: var(--adoc-red); }
+
+/* ---- Steps ------------------------------------------------------------ */
+
+.adoc-steps {
+    list-style: none;
+    counter-reset: adoc-step;
+    padding: 0 !important;
+    margin: 1.4rem 0;
+}
+
+.adoc-steps > li {
+    counter-increment: adoc-step;
+    position: relative;
+    padding: 0 0 1.3rem 3.1rem;
+    margin: 0 !important;
+}
+
+.adoc-steps > li::before {
+    content: counter(adoc-step);
+    position: absolute;
+    left: 0;
+    top: -.1rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--adoc-yellow);
+    color: var(--adoc-ink);
+    font-weight: 800;
+    font-size: .9rem;
+}
+
+.adoc-steps > li::after {
+    content: "";
+    position: absolute;
+    left: 1.02rem;
+    top: 2.2rem;
+    bottom: .2rem;
+    width: 2px;
+    background: var(--adoc-line);
+}
+
+.adoc-steps > li:last-child::after {
+    display: none;
+}
+
+.adoc-steps > li > strong:first-child {
+    display: block;
+    color: var(--adoc-ink);
+}
+
+/* ---- Cards ------------------------------------------------------------ */
+
+.adoc-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.4rem 0;
+}
+
+.adoc-card {
+    display: block;
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--adoc-radius);
+    border: 1px solid var(--adoc-line);
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    font-size: .92rem;
+    line-height: 1.5;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+a.adoc-card:hover {
+    color: inherit;
+    transform: translateY(-3px);
+    box-shadow: var(--adoc-shadow);
+}
+
+.adoc-card h4 {
+    margin: 0 0 .35rem !important;
+    font-size: 1rem;
+}
+
+.adoc-card p {
+    margin: 0;
+    color: var(--adoc-muted);
+}
+
+/* ---- Badges, figures, file tree, definition lists ------------------------ */
+
+.adoc-badge {
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: .12rem .5rem;
+    border-radius: 999px;
+    background: var(--adoc-soft);
+    border: 1px solid var(--adoc-line);
+    color: var(--adoc-muted);
+    vertical-align: middle;
+}
+
+.adoc-badge.new { background: var(--adoc-yellow); border-color: var(--adoc-yellow); color: var(--adoc-ink); }
+.adoc-badge.optional { background: var(--adoc-blue-soft); border-color: var(--adoc-blue-soft); color: var(--adoc-blue); }
+.adoc-badge.editor { background: var(--adoc-green-soft); border-color: var(--adoc-green-soft); color: var(--adoc-green); }
+
+.adoc-figure {
+    margin: 1.6rem 0;
+    text-align: center;
+}
+
+.adoc-figure img {
+    border: 1px solid var(--adoc-line);
+}
+
+.adoc-figure figcaption {
+    font-size: .82rem;
+    color: var(--adoc-muted);
+    margin-top: .5rem;
+}
+
+.adoc-tree {
+    font-family: var(--adoc-mono);
+    font-size: .82rem;
+    line-height: 1.6;
+    white-space: pre;
+}
+
+.adoc-fields {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: .55rem 1.2rem;
+    margin: 1.2rem 0;
+    font-size: .92rem;
+}
+
+.adoc-fields dt {
+    font-family: var(--adoc-mono);
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--adoc-ink);
+}
+
+.adoc-fields dd {
+    margin: 0;
+}
+
+/* ---- Release notes & help box ----------------------------------------- */
+
+.adoc-release {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    border: 1px solid var(--adoc-line);
+    margin: 1rem 0;
+}
+
+.adoc-release h3 {
+    margin: 0 0 .5rem !important;
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+}
+
+.adoc-release time {
+    font-size: .8rem;
+    font-weight: 400;
+    color: var(--adoc-muted);
+}
+
+.adoc-help {
+    margin-top: 4rem;
+    padding: 1.6rem;
+    border-radius: 20px;
+    background: var(--adoc-soft);
+    border: 1px solid var(--adoc-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.adoc-help h2 {
+    font-size: 1.15rem !important;
+    margin: 0 0 .2rem !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+.adoc-help p {
+    margin: 0;
+    color: var(--adoc-muted);
+}
+
+.adoc-updated {
+    font-size: .8rem;
+    color: var(--adoc-muted);
+    margin-top: 1rem;
+}
+
+/* ---- Games & assets (layouts: games, game, unity_assets, single_asset) -- */
+
+.adoc-product {
+    background: none; /* some per-game themes in theme.scss paint the body */
+    font-size: 1rem;
+}
+
+.adoc-product .adoc-hero-img {
+    width: 340px;
+}
+
+#gameplay > h2,
+#screenshots > h2 {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--adoc-line);
+}
+
+/* Screenshots: a swipeable strip, so portrait and landscape shots sit side by side. */
+.adoc-shots {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-bottom: .75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--adoc-line) transparent;
+}
+
+.adoc-shots a {
+    flex: none;
+    scroll-snap-align: start;
+}
+
+.adoc-shots img {
+    display: block;
+    height: clamp(240px, 45vw, 400px);
+    width: auto;
+    border-radius: var(--adoc-radius);
+    border: 1px solid var(--adoc-line);
+    transition: border-color .15s;
+}
+
+.adoc-shots a:hover img {
+    border-color: var(--adoc-ink);
+}
+
+.adoc-product .adoc-help {
+    margin-top: 3.5rem;
+}
+
+/* App-icon logo above the title and fact chips under the lead (single_asset: logo, highlights). */
+.adoc-logo {
+    display: block;
+    width: 88px;
+    height: 88px;
+    border-radius: 24px;
+    box-shadow: var(--adoc-shadow-hover);
+    transform: rotate(-4deg);
+    margin-bottom: 1.25rem;
+}
+
+.adoc-highlights li {
+    font-size: .9rem;
+    padding: .4rem .9rem;
+}
+
+/* A game made with the asset (single_asset: built_with): its poster beside a short pitch, on the game's colours. */
+.adoc-built {
+    position: relative;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+    margin: 2.5rem 0 3rem;
+    padding: 2.25rem 2.5rem;
+    border-radius: calc(var(--adoc-radius) * 1.5);
+    background: var(--adoc-ink);
+    color: #fff;
+    overflow: hidden;
+}
+
+.adoc-built-art {
+    display: block;
+    border-radius: var(--adoc-radius);
+    overflow: hidden;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, .28);
+    transform: rotate(-3deg);
+    transition: transform .25s ease;
+}
+
+.adoc-built-art:hover { transform: rotate(-1deg) translateY(-4px); }
+.adoc-built-art img { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; object-position: top; }
+
+.adoc-built-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: .25rem 0 .9rem;
+}
+
+.adoc-built-title img { width: 64px; height: 64px; border-radius: 18px; box-shadow: 0 10px 24px rgba(0, 0, 0, .22); }
+.adoc-built-title h2 { margin: 0; font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 700; letter-spacing: -.02em; color: #fff; }
+.adoc-built p { font-size: 1.08rem; line-height: 1.55; max-width: 34rem; margin-bottom: 1.4rem; color: rgba(255, 255, 255, .95); }
+.adoc-built .adoc-btn { background: rgba(255, 255, 255, .92); border-color: transparent; }
+.adoc-built .adoc-btn:hover { background: #fff; border-color: transparent; }
+.adoc-built .adoc-btn.primary { background: var(--adoc-ink); color: #fff; }
+.adoc-built .adoc-btn.primary:hover { background: #000; }
+
+/* ---- Site pages (layouts: page, post) --------------------------------- */
+
+.adoc-meta a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.adoc-author {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 2.5rem;
+}
+
+.adoc-author img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+}
+
+.adoc-author p {
+    margin: 0;
+    color: var(--adoc-muted);
+}
+
+/* ---- Responsive ------------------------------------------------------- */
+
+@media (max-width: 991px) {
+    .adoc {
+        padding-top: 1.5rem;
+    }
+
+    .adoc-hero {
+        grid-template-columns: 1fr;
+        padding: 1.4rem;
+    }
+
+    .adoc-hero-img {
+        display: none;
+    }
+
+    .adoc-product .adoc-hero-img {
+        display: block;
+        order: -1;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .adoc-built {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+        padding: 1.75rem 1.25rem;
+    }
+
+    .adoc-built-art { width: 150px; margin: 0 auto; }
+
+    .adoc-body {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    /* The table of contents becomes a collapsible box above the content. */
+    .adoc-sidebar {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .adoc-toc-box {
+        border: 1px solid var(--adoc-line);
+        border-radius: 12px;
+        padding: .8rem 1rem;
+        background: var(--adoc-soft);
+    }
+
+    .adoc-toc-box summary {
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .adoc-toc-box summary::after {
+        content: "+";
+        float: right;
+        font-size: 1rem;
+        line-height: 1;
+    }
+
+    .adoc-toc-box[open] summary {
+        margin-bottom: .75rem;
+    }
+
+    .adoc-toc-box[open] summary::after {
+        content: "\2212";
+    }
+
+    .adoc-fields {
+        grid-template-columns: 1fr;
+        gap: .15rem;
+    }
+
+    .adoc-fields dd {
+        margin-bottom: .6rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .adoc * {
+        transition: none !important;
+    }
+}
+
+/* Gameplay video and click-to-play browser demo on an asset page. */
+.adoc-video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 2.5rem;
+    border-radius: var(--adoc-radius);
+    background: #05070d;
+}
+
+.adoc-demo {
+    margin-bottom: 2.5rem;
+}
+
+.adoc-demo-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: var(--adoc-radius);
+    background: #05070d center / cover no-repeat;
+}
+
+.adoc-demo-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.adoc-demo-frame .adoc-btn {
+    font-size: 1rem;
+    padding: .8rem 1.4rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .45);
+    cursor: pointer;
+}
+
+.adoc-demo-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem 1rem;
+    margin-top: .6rem;
+    font-size: .9rem;
+    color: var(--adoc-muted);
+}
+
+.adoc-demo-note a,
+.adoc-demo-fullscreen {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 700;
+    color: var(--adoc-blue);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Bootstrap form fields (contact page) in the site's look. */
+.adoc .form-control {
+    padding: .85rem 1.1rem;
+    border: 1.5px solid var(--adoc-line);
+    border-radius: 16px !important;
+    background: #fff;
+    font-family: inherit;
+    color: var(--adoc-ink);
+}
+
+.adoc .form-control:focus {
+    border-color: var(--adoc-ink);
+    box-shadow: 0 0 0 3px var(--adoc-yellow-soft);
+}
+
+/* Timeline (About page): .adoc-steps with dots instead of numbers. */
+.adoc-timeline > li::before {
+    content: "";
+    left: .55rem;
+    top: .45rem;
+    width: 1rem;
+    height: 1rem;
+    border: 3px solid var(--adoc-yellow);
+    background: #fff;
+}
+
+.adoc-timeline > li::after {
+    top: 1.6rem;
+}
+
+.adoc-timeline > li > strong:first-child {
+    font-size: 1.15rem;
+}
+
+.adoc-timeline time {
+    display: block;
+    font-size: .88rem;
+    color: var(--adoc-muted);
+    margin-bottom: .3rem;
+}
+
+/* Pills inside content (About: skills); .adoc-meta outside .adoc-content needs none of this. */
+.adoc-content .adoc-meta {
+    padding: 0;
+}
+
+.adoc-content .adoc-meta li {
+    margin: 0;
+}
+
+.adoc-skills li {
+    font-size: .95rem;
+    font-weight: 700;
+    padding: .45rem 1rem;
+    color: var(--adoc-ink);
+}
+
+/* Blog post (layout: post): one narrow reading column, cover image under the title. */
+.adoc-post {
+    max-width: 760px;
+}
+
+.adoc-post .adoc-content {
+    font-size: 1.08rem;
+    line-height: 1.75;
+}
+
+.adoc-post-cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 730 / 383;
+    object-fit: cover;
+    border-radius: var(--adoc-radius);
+    box-shadow: var(--adoc-shadow-hover);
+    margin-bottom: 3rem;
+}
+
+.adoc-post .adoc-cards {
+    grid-template-columns: 1fr 1fr;
+}
+
+*, *::before, *::after { box-sizing: border-box; } /* the website gets it from Bootstrap */
+body { margin: 0; background: #FBF8F1; }
+.adoc-hero > *, .adoc-body > *, .adoc-content { min-width: 0; }
+.adoc { padding-left: 24px; padding-right: 24px; padding-bottom: 4rem; }
+.adoc-licence { margin: 0 0 .75rem; }
+.adoc-licence summary { cursor: pointer; font-weight: 700; color: var(--adoc-ink); }
+.adoc-licence pre { white-space: pre-wrap; font-size: .8rem; max-height: 24rem; overflow: auto; }
+</style></head>
+<body id="top"><div class="adoc">
+  <header class="adoc-hero"><div>
+    <span class="adoc-eyebrow">Documentation</span>
+    <h1>ShoreLine</h1>
+    <p class="adoc-lead">Mobile-ready stylized water for Unity URP: depth colour, shore waves, foam, caustics, refraction and Gerstner waves, an ocean to the horizon, three quality tiers and CPU height queries.</p>
+    <ul class="adoc-meta"><li>Version <strong>1.0.0</strong></li><li>Unity <strong>6000.0+</strong></li><li>Platforms <strong>Android, iOS, Desktop</strong></li><li>Updated <strong>Nov 19, 2026</strong></li></ul>
+    <div class="adoc-actions">
+      <a class="adoc-btn primary" href="https://hardartcore.com/unity_assets/shoreline/documentation/">Online documentation</a>
+      <a class="adoc-btn" href="mailto:support@hardartcore.com?subject=ShoreLine%20support">Get support</a>
+    </div>
+  </div></header>
+  <div class="adoc-body">
+    <aside class="adoc-sidebar"><details class="adoc-toc-box" open><summary>On this page</summary>
+      <nav id="adoc-toc" aria-label="Table of contents"></nav></details></aside>
+    <article class="adoc-content" id="adoc-content">
+<h2 id="overview">Overview</h2>
+<p>
+  <strong>ShoreLine</strong> is a hand-written URP water shader built for phones first: water that changes colour
+  with depth, foam where it meets the shore and objects, shore waves rolling up the beach, Gerstner waves, caustics,
+  refraction and reflections. It comes with an ocean that reaches the horizon, three quality tiers tuned on real
+  devices, and CPU height queries that match the waves on screen.
+</p>
+<p>
+  Every feature is a per-material toggle compiled as a shader keyword, so features you switch off cost nothing and are
+  stripped from your builds. A demo island shows everything, with touch controls for trying it on a phone.
+</p>
+
+<div class="adoc-cards">
+  <a class="adoc-card" href="#quick-start"><h4>Water in a minute</h4><p>Make a water mesh, add a Water Surface, drop on a preset material.</p></a>
+  <a class="adoc-card" href="#material"><h4>Depth, foam and shore waves</h4><p>Colour by water depth, foam lines on rocks, bands rolling up the beach.</p></a>
+  <a class="adoc-card" href="#damping"><h4>Calm shallow water</h4><p>Shallow Water Damping lowers the waves as the water gets shallow.</p></a>
+  <a class="adoc-card" href="#ocean-mode"><h4>Ocean to the horizon</h4><p>A fine grid follows the camera, a ring reaches the horizon, waves never swim.</p></a>
+  <a class="adoc-card" href="#quality"><h4>Three quality tiers</h4><p>Low, Medium and High, tuned on a OnePlus 3T and a Pixel 7 Pro.</p></a>
+  <a class="adoc-card" href="#scripting"><h4>Height queries</h4><p>Ask the water how high it is anywhere: the same waves as the shader.</p></a>
+  <a class="adoc-card" href="#surface-effects"><h4>Draw into the water</h4><p>Ripples, wakes and foam from your own scripts through Surface Effects.</p></a>
+  <a class="adoc-card" href="#demo"><h4>Touch demo</h4><p>An island with orbit, pinch and pan controls, viewpoints and tier buttons.</p></a>
+</div>
+
+<h3 id="requirements">Requirements</h3>
+<div class="adoc-table">
+  <table>
+    <thead><tr><th>Item</th><th>Version</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Unity</td><td>6000.0+</td><td>Tested on 6000.0, 6000.3 and 6000.6</td></tr>
+      <tr><td>Universal Render Pipeline</td><td>17.0+</td><td>A Universal Renderer, Forward or Forward+. Render Graph.</td></tr>
+      <tr><td><code>com.unity.inputsystem</code></td><td>any</td><td><span class="adoc-badge optional">Optional</span> Only the demo's camera reads input; it works with the Input System or the legacy Input Manager</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  Tested on Android with OpenGL ES 3 and Vulkan. The shader also compiles for Direct3D 11 and Metal (checked by the
+  package's tests). Perspective and orthographic cameras are both supported.
+</p>
+
+<h2 id="quick-start">Quick start</h2>
+<ol class="adoc-steps">
+  <li><strong>Import the package</strong> Everything lands in <code>Assets/HardArtcore/ShoreLine</code>.</li>
+  <li><strong>Try the demo</strong> Open <code>Demo/ShoreLine_Demo.unity</code> and press <kbd>Play</kbd>. If the scene's water looks flat and plain, follow the next step first.</li>
+  <li><strong>Add the renderer feature</strong> Select any water material. If your URP renderer is missing the <strong>ShoreLine Feature</strong>, the inspector says so: click <strong>Fix: add ShoreLine Feature</strong>. It is safe to click twice; it never adds a second copy.</li>
+  <li><strong>Make a water mesh</strong> <span class="adoc-menu">Tools › HardArtcore › ShoreLine › Create Water Mesh</span>. Waves move the vertices, so the water needs a subdivided grid, not Unity's plane.</li>
+  <li><strong>Add the water</strong> Create a GameObject with a Mesh Filter (your new mesh), a Mesh Renderer and <span class="adoc-menu">Add Component › HardArtcore › ShoreLine › Water Surface</span>. Assign a material from <code>Materials/Presets</code>.</li>
+</ol>
+<div class="adoc-callout tip">
+  <span class="adoc-callout-title">Tip</span>
+  <p>Put something under the water: the depth colour, foam and shore waves all come from the distance between the water surface and the ground below it.</p>
+</div>
+
+<h3 id="demo">The demo scene</h3>
+<p>
+  <code>Demo/ShoreLine_Demo.unity</code> is a sandy island in an ocean that reaches the horizon: a sloped beach
+  with shore waves, rocks with foam lines, a shallow lagoon with caustics, and a stone pier with one pool per preset.
+</p>
+<div class="adoc-table">
+  <table>
+    <thead><tr><th>Control</th><th>Touch</th><th>Mouse</th></tr></thead>
+    <tbody>
+      <tr><td>Orbit</td><td>Drag with one finger</td><td>Left drag</td></tr>
+      <tr><td>Zoom</td><td>Pinch</td><td>Scroll wheel</td></tr>
+      <tr><td>Pan</td><td>Drag with two fingers</td><td>Right or middle drag</td></tr>
+      <tr><td>Hide the UI</td><td><strong>Hide UI</strong>, then tap the top-right corner to bring it back</td><td><kbd>H</kbd></td></tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  The <strong>Quality</strong> buttons swap the ocean between three materials, one per tier, the same way you would in
+  a game. The <strong>Views</strong> buttons fly to the Island, Beach, Lagoon, Pools and Open Sea. Phones start on
+  Medium, desktops on High. The demo's two scripts, <code>DemoCameraController</code> and <code>DemoUI</code>, are
+  demo-only: delete the <code>Demo</code> folder when you don't need it.
+</p>
+
+<h2 id="setup">Renderer setup</h2>
+<p>
+  The <strong>ShoreLine Feature</strong> on your URP renderer asks URP for the camera depth texture (every depth
+  effect needs it) and, while a water material uses Refraction, for the opaque texture. It also draws the
+  <a href="#surface-effects">Surface Effects</a> buffer when something draws into it.
+</p>
+<dl class="adoc-fields">
+  <dt>Buffer Resolution</dt><dd>Texels per side of the Surface Effects buffer, 64–2048. Default 512.</dd>
+  <dt>Buffer World Size</dt><dd>Meters the buffer covers, centred where the camera looks. Default 64.</dd>
+  <dt>Request Opaque Texture</dt><dd>Lets the feature request the opaque texture for Refraction. It only does so while an active Water Surface uses Refraction. Turn off if none of your water refracts.</dd>
+</dl>
+<p>
+  Without the feature (or on a camera without a depth texture) the water never turns black or pink: depth effects read
+  as deep water, and Refraction falls back to plain transparency. The material inspector shows a warning with a
+  one-click fix for every active renderer that is missing the feature, and a clear message if the project isn't
+  using URP.
+</p>
+
+<h2 id="making-water">Making water</h2>
+<h3 id="water-mesh">Water meshes</h3>
+<p><span class="adoc-menu">Tools › HardArtcore › ShoreLine › Create Water Mesh</span> saves a mesh asset:</p>
+<dl class="adoc-fields">
+  <dt>Size</dt><dd>Width of the grid in meters.</dd>
+  <dt>Resolution</dt><dd>Quads per side, 1–512. More quads give smoother waves but cost more vertices; the window shows the vertex count.</dd>
+  <dt>Ocean Ring</dt><dd>Adds a low-detail ring around the grid that reaches to the horizon. Use it with <a href="#ocean-mode">Ocean Mode</a>.</dd>
+  <dt>Outer Size</dt><dd>Total width including the ring, in meters.</dd>
+</dl>
+<p>
+  The ring shares the grid's border vertices, so the mesh never cracks between the two. Waves are computed in world
+  space, so you can scale and place several water objects freely.
+</p>
+
+<h3 id="water-surface">Water Surface</h3>
+<p>Put a <strong>Water Surface</strong> on every water object. It keeps the renderer bounds large enough for the waves (so water at the screen edges is never culled), answers height queries, and runs Ocean Mode.</p>
+<dl class="adoc-fields">
+  <dt>Ocean Mode</dt><dd>Moves the water with the camera, snapped to the grid spacing so the waves don't slide. Needs a mesh with an ocean ring.</dd>
+  <dt>Follow Camera</dt><dd>The camera Ocean Mode follows. Empty = <code>Camera.main</code>.</dd>
+</dl>
+
+<h3 id="presets">Presets</h3>
+<div class="adoc-table">
+  <table>
+    <thead><tr><th>Material</th><th>Tier</th><th>Look</th></tr></thead>
+    <tbody>
+      <tr><td><code>Water_Tropical</code></td><td>High</td><td>Turquoise shallows, deep blue, caustics</td></tr>
+      <tr><td><code>Water_Lake</code></td><td>Medium</td><td>Green-blue, two gentle waves</td></tr>
+      <tr><td><code>Water_Swamp</code></td><td>Medium</td><td>Murky olive, still, pale foam</td></tr>
+      <tr><td><code>Water_Pool</code></td><td>High</td><td>Clear pool blue, still, caustics, no shore waves or surface foam</td></tr>
+      <tr><td><code>Water_Toon</code></td><td>Medium</td><td>Saturated blues, crisp wide foam lines</td></tr>
+      <tr><td><code>Water_Default_Low</code> / <code>_Medium</code> / <code>_High</code></td><td>each</td><td>The tropical look at each tier</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>The textures (normal map, foam noise and caustics) are generated by HardArtcore and tile seamlessly.</p>
+
+<h2 id="material">Material settings</h2>
+<p>
+  The inspector groups the settings by feature; a feature's toggle shows or hides its settings. Every setting has a
+  tooltip. The header links back to this documentation.
+</p>
+<h3 id="mat-color">Colour</h3>
+<dl class="adoc-fields">
+  <dt>Shallow Color / Deep Color</dt><dd>Colour, and opacity in alpha, of shallow and deep water.</dd>
+  <dt>Horizon Color</dt><dd>Colour seen at grazing angles; alpha sets how strongly it is mixed in.</dd>
+  <dt>Depth Distance</dt><dd>Water depth in meters at which the Deep Color is fully reached.</dd>
+  <dt>Horizon Power</dt><dd>Higher keeps the horizon colour close to the horizon.</dd>
+  <dt>Edge Fade</dt><dd>Fades the water out where it meets objects, over this many meters of depth. 0 = off.</dd>
+</dl>
+<h3 id="mat-waves">Waves</h3>
+<dl class="adoc-fields">
+  <dt>Waves</dt><dd>Gerstner waves that move the mesh. Needs a subdivided mesh.</dd>
+  <dt>Wave A–D</dt><dd>X, Y = direction on the XZ plane. Z = steepness 0–1. W = wavelength in meters. When the steepness of all waves adds up to more than 1, they are scaled down together so the surface never folds over.</dd>
+  <dt>Wave Count</dt><dd>How many of the waves A–D are used. Fewer waves are cheaper.</dd>
+  <dt>Wave Speed</dt><dd>Multiplier on the natural speed (longer waves travel faster).</dd>
+  <dt>Wave Fade Start / End</dt><dd>Distance from the camera (m) where waves start flattening, and where they are flat. In Ocean Mode keep the end inside the fine inner grid; the Water Surface inspector warns when it isn't.</dd>
+  <dt>Shallow Water Damping / Damping Depth</dt><dd>See <a href="#damping">Shallow Water Damping</a>.</dd>
+</dl>
+<h3 id="mat-lighting">Normals and lighting</h3>
+<dl class="adoc-fields">
+  <dt>Normal Map / Strength / Tiling / Speed</dt><dd>Small ripples: two scrolling copies of the normal map, blended. Tiling is in repeats per meter.</dd>
+  <dt>Specular Color / Smoothness</dt><dd>The sun glint. Black = no glint; higher smoothness = a smaller, sharper glint.</dd>
+  <dt>Environment Reflections / Reflection Strength</dt><dd>Reflects the sky and reflection probes at grazing angles. Off: the horizon colour only, which is much cheaper on older GPUs.</dd>
+  <dt>Receive Shadows</dt><dd>Shadows from objects fall onto the water.</dd>
+</dl>
+<h3 id="mat-foam">Foam and shore waves</h3>
+<dl class="adoc-fields">
+  <dt>Foam Noise / Foam Color / Tiling / Speed</dt><dd>The noise that breaks up all foam, its colour (alpha = strength), repeats per meter and scroll speed.</dd>
+  <dt>Intersection Foam</dt><dd>A foam line where objects and the shore touch the water. <strong>Width</strong>: water depth (m) over which it fades out. <strong>Softness</strong>: how soft its edge is.</dd>
+  <dt>Surface Foam</dt><dd>Foam patches on open water. <strong>Amount</strong> everywhere, plus <strong>Crest</strong> foam on wave tops.</dd>
+  <dt>Shore Waves</dt><dd>Foam bands rolling toward the shore: <strong>Band Count</strong>, <strong>Band Speed</strong>, <strong>Band Width</strong> and <strong>Range</strong> (the water depth where they start). They follow the water depth, so keep them off on flat floors such as pools.</dd>
+</dl>
+<h3 id="mat-refraction">Refraction and caustics</h3>
+<dl class="adoc-fields">
+  <dt>Refraction / Strength</dt><dd>Distorts what is seen through the water. Objects in front of the water never bleed into it.</dd>
+  <dt>Caustics</dt><dd>Animated light patterns on the ground under the water: texture, <strong>Strength</strong>, <strong>Tiling</strong>, <strong>Speed</strong>, and <strong>Max Depth</strong> (m) where they fade out.</dd>
+</dl>
+
+<h2 id="damping">Shallow Water Damping</h2>
+<p>
+  Waves are the same height everywhere, but in shallow water that looks wrong: on a flat beach the waterline follows
+  the straight wave crests instead of the shore. With <strong>Shallow Water Damping</strong> the water's vertex shader
+  reads the depth under every vertex from the camera depth texture and lowers the waves smoothly, from full height at
+  <strong>Damping Depth</strong> (2 m by default) down to none at the shoreline.
+</p>
+<ul>
+  <li>Vertices buried just under the ground (within 2 m) count as shallow, so the triangles along the shore calm down too.</li>
+  <li>Objects far in front of the water, like a mast or a hill between the camera and the sea, are ignored, so they never flatten the water behind them.</li>
+  <li>Off-screen vertices use the nearest edge pixel, so the damping stays continuous at the screen edges.</li>
+  <li>It is on in every preset and costs no measurable time (measured on a OnePlus 3T with OpenGL ES 3).</li>
+</ul>
+<div class="adoc-callout warning">
+  <span class="adoc-callout-title">Buoyancy</span>
+  <p>The CPU can't see the depth texture, so <code>SampleHeight(position)</code> returns undamped waves. For objects in shallow water, pass the depth: <code>SampleHeight(position, waterDepth)</code> applies exactly the same damping (<a href="#scripting">Scripting</a>).</p>
+</div>
+
+<h2 id="ocean-mode">Ocean Mode</h2>
+<ol class="adoc-steps">
+  <li><strong>Make an ocean mesh</strong> Create Water Mesh with <strong>Ocean Ring</strong> on. The demo uses Size 120, Resolution 160 (0.75 m quads) and Outer Size 4000.</li>
+  <li><strong>Turn on Ocean Mode</strong> on its Water Surface, and set <strong>Follow Camera</strong> if it isn't <code>Camera.main</code>.</li>
+  <li><strong>Fit the wave fade</strong> Set <strong>Wave Fade End</strong> inside the fine grid: less than half its size minus half a quad (59.6 m for the demo mesh). The long ring quads can't carry wave shapes. The Water Surface inspector warns when the fade reaches past the grid.</li>
+</ol>
+<p>
+  The water follows the camera in play mode, snapped to the quad size, and because waves and textures use world
+  coordinates the movement is invisible. Fog is computed per pixel, so it stays correct on the kilometre-long ring
+  triangles.
+</p>
+
+<h2 id="quality">Quality tiers</h2>
+<p>
+  A tier is a set of features. <code>WaterQuality.Apply</code> sets one on a material: it switches the costly
+  features and caps the wave count, but never touches artistic choices (waves on or off, intersection foam, shore
+  waves, damping). The cap only lowers the count: a 4-wave material set to Low keeps 2 waves when you switch it back
+  to High, so set the count again (or undo) if you want them back:
+</p>
+<div class="adoc-table">
+  <table>
+    <thead><tr><th></th><th>Waves max</th><th>Refraction</th><th>Caustics</th><th>Surface foam</th><th>Reflections</th><th>Received shadows</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Low</strong></td><td>2</td><td>off</td><td>off</td><td>off</td><td>off</td><td>off</td></tr>
+      <tr><td><strong>Medium</strong></td><td>3</td><td>on</td><td>off</td><td>on</td><td>on</td><td>off</td></tr>
+      <tr><td><strong>High</strong></td><td>4</td><td>on</td><td>on</td><td>on</td><td>on</td><td>on</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  Tiers are chosen per material in the Editor, and features no material uses are stripped from builds. To change
+  quality at runtime, swap between materials of different tiers, as the demo's Quality buttons do. Don't switch
+  feature keywords at runtime: a build may not contain that variant.
+</p>
+<h3 id="performance">Performance</h3>
+<p>Measured with the water covering about 85% of the screen, at native resolution, with a 60 fps cap:</p>
+<div class="adoc-table">
+  <table>
+    <thead><tr><th>Device</th><th>API</th><th>Low</th><th>Medium</th><th>High</th></tr></thead>
+    <tbody>
+      <tr><td>Pixel 7 Pro (3120×1440)</td><td>Vulkan</td><td>60 fps</td><td>60 fps</td><td>60 fps</td></tr>
+      <tr><td>OnePlus 3T, 2016 (1920×1080)</td><td>OpenGL ES 3</td><td>56 fps sustained; ~46 once the phone is hot</td><td>37 fps</td><td>34 fps</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  On older phones the biggest single cost is Environment Reflections; Low turns them off. The water's cost scales with
+  the screen area it covers, so a Render Scale below 1 in your URP asset helps a lot on old GPUs.
+</p>
+
+<h2 id="scripting">Scripting</h2>
+<p>Everything is in the <code>HardArtcore.ShoreLine</code> namespace.</p>
+<figure class="adoc-code">
+  <figcaption>Buoyancy.cs</figcaption>
+  <pre><code class="language-csharp">using HardArtcore.ShoreLine;
+using UnityEngine;
+
+public class Buoyancy : MonoBehaviour
+{
+    public WaterSurface water;
+    // Seabed and terrain layers only: not this object's layer, not the water's.
+    public LayerMask groundMask;
+
+    void FixedUpdate()
+    {
+        // The same Gerstner waves the shader draws, at this XZ position.
+        float waterY = water.SampleHeight(transform.position);
+
+        // With Shallow Water Damping, pass the depth under the point: from the water's rest height
+        // (not the wave height) down to the ground, like the shader measures it.
+        if (Physics.Raycast(transform.position + Vector3.up * 50f, Vector3.down, out var hit, 200f,
+                            groundMask, QueryTriggerInteraction.Ignore))
+            waterY = water.SampleHeight(transform.position, water.transform.position.y - hit.point.y);
+
+        var p = transform.position;
+        transform.position = new Vector3(p.x, waterY, p.z);
+    }
+}</code></pre>
+</figure>
+<dl class="adoc-fields">
+  <dt><code>SampleHeight(Vector3 position)</code></dt><dd>World height of the water above <code>position</code> (its Y is ignored). Includes the horizontal motion of the waves. Ignores the distance fade, damping and Surface Effects (those are GPU only). Exact for mixed waves; when all the steepness points one way at the maximum, the crest is a sharp point and the result can be a few centimeters off there.</dd>
+  <dt><code>SampleHeight(Vector3 position, float waterDepth)</code></dt><dd>The same, with Shallow Water Damping applied for water <code>waterDepth</code> meters deep, when the material uses it. Measure the depth from the water's rest height. The shader reads it from the camera depth texture, so over steep slopes or under overhangs a vertical raycast can differ slightly.</dd>
+  <dt><code>WaterSurface.Active</code></dt><dd>Every enabled Water Surface.</dd>
+  <dt><code>RefreshWaveCache()</code></dt><dd>Call after changing the water material's waves from code at runtime; inspector edits are picked up automatically.</dd>
+  <dt><code>OceanMode</code>, <code>FollowCamera</code></dt><dd>The inspector fields, settable from code.</dd>
+  <dt><code>WaterSurface.ShaderTime</code></dt><dd>The clock the shader animates with (<code>Time.time</code> in play mode). Use it for your own wave math.</dd>
+  <dt><code>GerstnerWaves</code></dt><dd>The CPU wave math: <code>Offset</code>, <code>SampleHeight</code>, <code>MaxAmplitude</code> and <code>ShallowWaterDamping</code>, matching the shader exactly.</dd>
+  <dt><code>WaterQuality.Apply(material, tier)</code></dt><dd>Applies a <a href="#quality">tier</a> to a material, in the Editor or on material copies.</dd>
+  <dt><code>WaterMeshBuilder.BuildGrid</code> / <code>BuildOcean</code></dt><dd>The meshes the Create Water Mesh window makes, from code.</dd>
+</dl>
+
+<h2 id="surface-effects">Surface Effects</h2>
+<p>
+  Surface Effects let scripts draw into the water: ripples, wakes, rain, foam trails. A top-down buffer around the
+  camera holds a height offset, a normal tilt and foam, and the water shader adds them on top of its waves. It costs
+  nothing until something draws into it.
+</p>
+<figure class="adoc-code">
+  <figcaption>Wake.cs</figcaption>
+  <pre><code class="language-csharp">using HardArtcore.ShoreLine;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+[ExecuteAlways]
+public class Wake : WaterEffectSource
+{
+    public Mesh quad;
+    public Material wakeMaterial;   // a shader built on HAW_SurfaceEffectsSource.hlsl
+    readonly MaterialPropertyBlock props = new MaterialPropertyBlock();
+
+    public override void Draw(RasterCommandBuffer cmd, in SurfaceEffectsContext context)
+    {
+        if (!context.WorldRect.Contains(new Vector2(transform.position.x, transform.position.z))) return;
+        cmd.DrawMesh(quad, transform.localToWorldMatrix, wakeMaterial, 0, 0, props);
+    }
+}</code></pre>
+</figure>
+<div class="adoc-callout warning">
+  <span class="adoc-callout-title">Contract</span>
+  <p>Source shaders include <code>Shaders/Includes/HAW_SurfaceEffectsSource.hlsl</code>, place vertices with <code>HAW_WorldToEffectsClip</code>, use <code>Blend One One</code> with <code>BlendOp Add, Max</code>, and output <code>(height m, -dh/dx, -dh/dz, foam 0..1)</code>: RGB is summed across sources, alpha takes the maximum. Pass per-draw values with a <code>MaterialPropertyBlock</code>. If you override <code>OnEnable</code> or <code>OnDisable</code>, call the base methods, or the source never registers.</p>
+</div>
+<p>
+  <code>SurfaceEffectsContext</code> gives the camera, the buffer's <code>WorldRect</code> (skip draws outside it),
+  <code>TexelSize</code> and <code>Resolution</code>. On a device that can't blend into half-float render targets the
+  effects switch off with one warning in the log, and the water keeps working.
+</p>
+
+<h3 id="custom-shaders">Your own water shaders</h3>
+<p>
+  The shader's logic lives in include files under <code>Shaders/Includes</code> that take their inputs as parameters,
+  so your own shaders can reuse them: <code>HAW_Depth</code> (depth reconstruction for perspective and orthographic
+  cameras, and the vertex-stage water depth), <code>HAW_Waves</code> (Gerstner offset, normal and damping),
+  <code>HAW_Foam</code>, <code>HAW_Lighting</code>, <code>HAW_Refraction</code>, <code>HAW_Caustics</code> and
+  <code>HAW_SurfaceEffects</code>. <code>HAW_Version.hlsl</code> defines <code>HAW_CORE_VERSION</code>.
+</p>
+<p>
+  The package also maintains the scripting defines <code>HAW_SHORELINE</code> and
+  <code>HAW_SHORELINE_1_0</code>, so your assemblies can check for it with <code>defineConstraints</code>.
+  They are removed again if you delete the package folder.
+</p>
+
+<h2 id="architecture">Architecture</h2>
+<div class="adoc-table">
+  <table>
+    <thead><tr><th>Assembly</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><code>HardArtcore.ShoreLine</code></td><td><code>WaterSurface</code>, <code>GerstnerWaves</code>, <code>WaterMeshBuilder</code>, <code>WaterQuality</code>, <code>ShoreLineFeature</code>, Surface Effects</td></tr>
+      <tr><td><code>HardArtcore.ShoreLine.Editor</code></td><td>Material inspector, renderer setup check, Create Water Mesh window, Water Surface inspector, scripting defines</td></tr>
+    </tbody>
+  </table>
+</div>
+<pre class="adoc-tree">Assets/HardArtcore/ShoreLine/
+├── Documentation.html          this documentation
+├── Runtime/                    WaterSurface, GerstnerWaves, WaterMeshBuilder, WaterQuality
+│   └── Effects/                ShoreLineFeature, WaterEffects, WaterEffectSource
+├── Editor/                     inspectors, setup check, Create Water Mesh window
+├── Shaders/                    ShoreLine.shader
+│   └── Includes/               HAW_*.hlsl, reusable in your own shaders
+├── Materials/Presets/          the presets and the Low/Medium/High defaults
+├── Textures/                   normal map, foam noise, caustics
+└── Demo/                       demo scene, its materials, meshes and two scripts (deletable)</pre>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<dl class="adoc-fields">
+  <dt>The water is one flat colour, with no foam</dt><dd>The renderer is missing the ShoreLine Feature, or the camera has no depth texture. Select the water material and click the Fix button.</dd>
+  <dt>Waves don't move the surface</dt><dd>The mesh has too few vertices. Make one with Create Water Mesh.</dd>
+  <dt>Water disappears at the screen edges</dt><dd>Add a Water Surface: it grows the renderer bounds to fit the waves.</dd>
+  <dt>Waves look broken far away in Ocean Mode</dt><dd>Wave Fade End is past the fine grid; the Water Surface inspector shows the largest value that fits.</dd>
+  <dt>Floating objects bob in shallow water</dt><dd>Use <code>SampleHeight(position, waterDepth)</code> so buoyancy gets the same damping as the visible water.</dd>
+  <dt>Shore waves pulse across a pool</dt><dd>Shore waves follow the water depth; on a flat floor every point has the same depth. Turn them off for pools (as the Pool preset does).</dd>
+  <dt>A feature looks missing in a build</dt><dd>Features switched on from code at runtime may have been stripped. Use a material that has the feature on.</dd>
+</dl>
+
+<h2 id="third-party">Third-party notices</h2>
+<p>None: the package contains no third-party code, fonts, textures or models.</p>
+
+<h2 id="release-notes">Release notes</h2>
+<div class="adoc-release">
+  <h3>1.0.0 <time datetime="2026-11-19">Nov 19, 2026</time></h3>
+  <ul>
+    <li>First release: depth colour, intersection and surface foam, shore waves, Gerstner waves with Shallow Water Damping, refraction, caustics, reflections and received shadows; Ocean Mode; three quality tiers; CPU height queries; Surface Effects; five presets and a touch demo.</li>
+  </ul>
+</div>
+
+      <section class="adoc-help"><div><h2>Need help?</h2>
+        <p>Questions, bug reports or feature requests: I usually reply within a day.</p></div>
+        <a class="adoc-btn primary" href="mailto:support@hardartcore.com?subject=ShoreLine%20support">support@hardartcore.com</a></section>
+    </article>
+  </div>
+</div>
+<script>// Asset documentation template (layout: asset_documentation). Loaded with `defer` after highlight.js.
+// Builds the sidebar table of contents from the page's h2/h3 headings, so pages written in HTML
+// or Markdown need no manual TOC; adds heading anchors, code copy buttons and syntax highlighting.
+(function () {
+  const content = document.getElementById('adoc-content');
+  const tocNav = document.getElementById('adoc-toc');
+  if (!content || !tocNav) return;
+
+  // A kramdown "* TOC {:toc}" left in a migrated Markdown page would duplicate the sidebar.
+  const legacyToc = content.querySelector('#markdown-toc');
+  if (legacyToc) legacyToc.remove();
+
+  const slug = function (text) {
+    return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+  };
+
+  // ---- Table of contents (h2 with nested h3) ----
+  const headings = [...content.querySelectorAll('h2, h3')].filter(function (h) {
+    return !h.closest('.adoc-help, .adoc-card, .adoc-release');
+  });
+  const used = new Set();
+  const root = document.createElement('ul');
+  let currentSub = null;
+
+  headings.forEach(function (h) {
+    if (!h.id) {
+      let id = slug(h.textContent) || 'section';
+      for (let n = 2; used.has(id) || document.getElementById(id); n++) id = slug(h.textContent) + '-' + n;
+      h.id = id;
+    }
+    used.add(h.id);
+    const label = h.dataset.toc || h.textContent.trim();
+
+    const anchor = document.createElement('a');
+    anchor.className = 'adoc-anchor';
+    anchor.href = '#' + h.id;
+    anchor.setAttribute('aria-label', 'Link to this section');
+    anchor.textContent = '#';
+    h.appendChild(anchor);
+
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = '#' + h.id;
+    link.textContent = label;
+    item.appendChild(link);
+
+    if (h.tagName === 'H2' || !root.lastElementChild) {
+      root.appendChild(item);
+      currentSub = null;
+    } else {
+      if (!currentSub) {
+        currentSub = document.createElement('ul');
+        root.lastElementChild.appendChild(currentSub);
+      }
+      currentSub.appendChild(item);
+    }
+  });
+  tocNav.appendChild(root);
+
+  // On small screens the TOC is a collapsible box; close it after a jump.
+  const box = tocNav.closest('details');
+  const small = window.matchMedia('(max-width: 991px)');
+  const syncBox = function () { if (box) box.open = !small.matches; };
+  syncBox();
+  small.addEventListener('change', syncBox);
+  tocNav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A' && small.matches && box) box.open = false;
+  });
+
+  // ---- Scroll spy ----
+  const links = [...tocNav.querySelectorAll('a')];
+  const updateActive = function () {
+    let current = -1;
+    headings.forEach(function (h, i) { if (h.getBoundingClientRect().top < 140) current = i; });
+    links.forEach(function (a, i) { a.classList.toggle('active', i === current); });
+    const active = links[current];
+    if (active && !small.matches) {
+      const sidebar = tocNav.closest('.adoc-sidebar');
+      const top = active.offsetTop, bottom = top + active.offsetHeight;
+      if (sidebar && (top < sidebar.scrollTop || bottom > sidebar.scrollTop + sidebar.clientHeight))
+        sidebar.scrollTop = top - sidebar.clientHeight / 3;
+    }
+  };
+  let ticking = false;
+  addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { updateActive(); ticking = false; });
+  }, { passive: true });
+  updateActive();
+
+  // ---- Code blocks: highlighting + copy button ----
+  if (window.hljs) {
+    content.querySelectorAll('pre code').forEach(function (block) {
+      // Blocks without a language class stay plain rather than being guessed.
+      if (/\blanguage-/.test(block.className)) hljs.highlightElement(block);
+    });
+  }
+
+  if (navigator.clipboard) {
+    content.querySelectorAll('pre').forEach(function (pre) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'adoc-copy';
+      button.textContent = 'Copy';
+      button.addEventListener('click', function () {
+        navigator.clipboard.writeText(pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText)
+          .then(function () {
+            button.textContent = 'Copied';
+            setTimeout(function () { button.textContent = 'Copy'; }, 1500);
+          });
+      });
+      pre.appendChild(button);
+    });
+  }
+})();
+</script>
+</body></html>

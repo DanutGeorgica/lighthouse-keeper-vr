@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 47fcf133e6975fe41aec6ca343b3c188
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 432064
+  packageName: 'ShoreLine: Stylized Water for URP (Mobile & Desktop)'
+  packageVersion: 1.0
+  assetPath: Assets/HardArtcore/ShoreLine/Shaders/ShoreLine.shader
+  uploadId: 1055276

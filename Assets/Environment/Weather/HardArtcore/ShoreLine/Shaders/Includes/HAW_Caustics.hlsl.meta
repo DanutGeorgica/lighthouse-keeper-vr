@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 85714176b5d964f4ea9980ce92f94461
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 432064
+  packageName: 'ShoreLine: Stylized Water for URP (Mobile & Desktop)'
+  packageVersion: 1.0
+  assetPath: Assets/HardArtcore/ShoreLine/Shaders/Includes/HAW_Caustics.hlsl
+  uploadId: 1055276

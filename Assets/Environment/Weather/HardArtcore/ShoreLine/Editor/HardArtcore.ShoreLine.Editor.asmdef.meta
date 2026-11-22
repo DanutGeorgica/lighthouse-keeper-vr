@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 889385592fda4bb42aeb7c29c43db3ed
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 432064
+  packageName: 'ShoreLine: Stylized Water for URP (Mobile & Desktop)'
+  packageVersion: 1.0
+  assetPath: Assets/HardArtcore/ShoreLine/Editor/HardArtcore.ShoreLine.Editor.asmdef
+  uploadId: 1055276

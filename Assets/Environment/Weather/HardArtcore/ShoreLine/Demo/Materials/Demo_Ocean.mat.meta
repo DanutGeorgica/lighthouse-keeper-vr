@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1841d119a29ea4b4e90145a3e2f078ea
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 432064
+  packageName: 'ShoreLine: Stylized Water for URP (Mobile & Desktop)'
+  packageVersion: 1.0
+  assetPath: Assets/HardArtcore/ShoreLine/Demo/Materials/Demo_Ocean.mat
+  uploadId: 1055276

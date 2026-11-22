@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ac2108a5d584d5f45a5f8dec20b94dfd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 432064
+  packageName: 'ShoreLine: Stylized Water for URP (Mobile & Desktop)'
+  packageVersion: 1.0
+  assetPath: Assets/HardArtcore/ShoreLine/Materials/Presets/Water_Pool.mat
+  uploadId: 1055276

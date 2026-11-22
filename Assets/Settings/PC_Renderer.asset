@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaterVolumeBackDepthFeature
   m_Active: 1
   volumeLayer:
-    serializedVersion: 2
     m_Bits: 1073741824
   backDepthShader: {fileID: 4800000, guid: 0010476b3d19d0c4c993983eb0d06c9e, type: 3}
 --- !u!114 &11400000
@@ -43,9 +42,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
-  - {fileID: -8878291031288471940}
   - {fileID: 2651976283914235519}
-  m_RendererFeatureMap: ad6b866f10d7b46c7c9e83a358f9c9847fee772361b6cd24
+  m_RendererFeatureMap: ad6b866f10d7b46c7fee772361b6cd24
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -101,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
   m_Name: ScreenSpaceAmbientOcclusion
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   m_Settings:
     AOMethod: 0
     Downsample: 0
