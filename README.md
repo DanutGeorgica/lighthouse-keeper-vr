@@ -57,6 +57,8 @@ video: https://www.youtube.com/watch?v=zrrIB1fh8L4
 
 ## Week 7-8 additions
 
+- video link: https://www.youtube.com/watch?v=PXwK-9yS-yM
+
 - visual scene additions:
   - new ocean (for the sake of allowing stuff to float) (https://assetstore.unity.com/packages/vfx/shaders/shoreline-stylized-water-for-urp-mobile-desktop-432064)
   - modified fog and lighting (they're volumetric now) (https://github.com/CristianQiu/Unity-URP-Volumetric-Light)
