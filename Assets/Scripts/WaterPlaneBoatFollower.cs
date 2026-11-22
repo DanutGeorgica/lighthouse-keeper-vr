@@ -8,7 +8,8 @@ public class WaterPlaneBoatFollower : MonoBehaviour
     [Header("References")]
     [SerializeField] private WaterSurface water;
     [SerializeField] private Transform boatVisual;
-    [SerializeField] private Transform forwardReference;
+    [Tooltip("Forward direction relative to this GameObject's local axes.")]
+    [SerializeField] private Vector3 forwardDirection = Vector3.forward;
 
     [Header("Hull Sampling")]
     [SerializeField, Min(0.1f)]
@@ -62,8 +63,8 @@ public class WaterPlaneBoatFollower : MonoBehaviour
         drivenVisual = boatVisual != null ? boatVisual : transform;
         visualIsRoot = drivenVisual == transform;
 
-        Transform forwardSource =
-            forwardReference != null ? forwardReference : drivenVisual;
+        Vector3 forwardWorld =
+            transform.TransformDirection(forwardDirection.normalized);
 
         if (visualIsRoot)
         {
@@ -73,13 +74,11 @@ public class WaterPlaneBoatFollower : MonoBehaviour
             if (transform.parent != null)
             {
                 initialForwardInParent =
-                    transform.parent.InverseTransformDirection(
-                        forwardSource.forward
-                    );
+                    transform.parent.InverseTransformDirection(forwardWorld);
             }
             else
             {
-                initialForwardInParent = forwardSource.forward;
+                initialForwardInParent = forwardWorld;
             }
 
             initialForwardInParent.Normalize();
@@ -94,9 +93,7 @@ public class WaterPlaneBoatFollower : MonoBehaviour
                 drivenVisual.rotation;
 
             initialForwardInRoot =
-                transform.InverseTransformDirection(
-                    forwardSource.forward
-                ).normalized;
+                transform.InverseTransformDirection(forwardWorld).normalized;
         }
 
         if (enableDebugLogs)
@@ -106,7 +103,7 @@ public class WaterPlaneBoatFollower : MonoBehaviour
                 $"Boat Root: {GetPath(transform)}\n" +
                 $"Boat Visual: {GetPath(drivenVisual)}\n" +
                 $"Visual Is Root: {visualIsRoot}\n" +
-                $"Forward Reference: {GetPath(forwardReference)}\n" +
+                $"Forward Direction: {forwardDirection}\n" +
                 $"Initial Visual Position: {drivenVisual.position}\n" +
                 $"Initial Visual Rotation: {drivenVisual.eulerAngles}",
                 this
