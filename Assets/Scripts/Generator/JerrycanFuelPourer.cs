@@ -72,7 +72,7 @@ public class JerrycanFuelPourer : MonoBehaviour
     }
 
     public void TryPourInto(
-        GeneratorFuelReceiver generator,
+        GeneratorController generator,
         float deltaTime)
     {
         if (generator == null ||

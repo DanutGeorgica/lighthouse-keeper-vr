@@ -13,6 +13,9 @@ public class BoatWaypointMovement : MonoBehaviour
     [Header("Orientation")]
     [SerializeField] private Transform forwardReference;
 
+    [Header("Debug")]
+    [SerializeField] private bool enableDebugLogs = true;
+
     private int currentWaypointIndex = 1;
     private bool routeFinished = false;
 
@@ -38,7 +41,10 @@ public class BoatWaypointMovement : MonoBehaviour
         if (forwardReference == null)
             forwardReference = transform;
 
-        Debug.Log("[BoatMovement] Route started!");
+        if (enableDebugLogs)
+        {
+            Debug.Log("[BoatMovement] Route started!");
+        }
     }
 
     private void Update()
@@ -63,7 +69,10 @@ public class BoatWaypointMovement : MonoBehaviour
             if (currentWaypointIndex >= waypoints.Length)
             {
                 routeFinished = true;
-                Debug.Log("[BoatMovement] Route completed!");
+                if (enableDebugLogs)
+                {
+                    Debug.Log("[BoatMovement] Route completed!");
+                }
                 return;
             }
 
