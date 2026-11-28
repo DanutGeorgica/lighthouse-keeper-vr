@@ -30595,7 +30595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae932c07b38fd904caf235d768409a78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeneratorFuelReceiver
-  currentState: 0
+  startingState: 1
   fuelCapacity: 40
   startingFuel: 20
   currentFuel: 0

@@ -1,3 +1,4 @@
+
 using System;
 using UnityEngine;
 
@@ -18,8 +19,14 @@ public class GeneratorController : MonoBehaviour
     }
 
     [Header("Generator State")]
+
+    [Tooltip("Generator state when the scene starts.")]
     [SerializeField]
-    private GeneratorState currentState = GeneratorState.Off;
+    private GeneratorState startingState = GeneratorState.Off;
+
+    // Runtime state. Not serialized because startingState controls
+    // initialization, while this variable changes during gameplay.
+    private GeneratorState currentState;
 
     public GeneratorState CurrentState => currentState;
 
@@ -92,11 +99,23 @@ public class GeneratorController : MonoBehaviour
             fuelCapacity
         );
 
-        // Start OFF if fuel is available.
-        // Otherwise, start OUT OF FUEL.
-        currentState = currentFuel > 0f
-            ? GeneratorState.Off
-            : GeneratorState.OutOfFuel;
+        // Initialize the runtime state from the selected starting state.
+        currentState = startingState;
+
+        // A generator cannot run without fuel.
+        // An empty tank takes priority unless the generator is faulted.
+        if (currentState != GeneratorState.Faulted)
+        {
+            if (currentFuel <= 0f)
+            {
+                currentState = GeneratorState.OutOfFuel;
+            }
+            // OutOfFuel is not a valid state if fuel is available.
+            else if (currentState == GeneratorState.OutOfFuel)
+            {
+                currentState = GeneratorState.Off;
+            }
+        }
 
         Collider fillZone = GetComponent<Collider>();
 
