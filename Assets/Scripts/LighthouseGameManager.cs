@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -22,6 +21,9 @@ public class LighthouseGameManager : MonoBehaviour
     [SerializeField, Range(0, 6)]
     private int beaconSpeedStartsAt = 3;
 
+    [Header("Beacon Runtime Information")]
+    [SerializeField] private bool isBeaconPowered;
+
     // =========================================================
     // FOGHORN
     // =========================================================
@@ -30,11 +32,54 @@ public class LighthouseGameManager : MonoBehaviour
     [SerializeField] private FoghornController foghornController;
 
     // =========================================================
+    // GENERATOR
+    // =========================================================
+
+    [Header("Generator")]
+    [SerializeField] private GeneratorController generatorController;
+
+    [Header("Fuel Consumption (Litres per Minute)")]
+    [Tooltip("Fuel consumed by the running generator itself, even when no powered equipment is active.")]
+    [SerializeField, Min(0f)]
+    private float generatorIdleFuelConsumptionPerMinute = 0.1f;
+
+    [Tooltip("Additional fuel consumed while the Fresnel lens is switched ON and powered.")]
+    [SerializeField, Min(0f)]
+    private float beaconFuelConsumptionPerMinute = 0.3f;
+
+    [Tooltip("Additional fuel consumed while the interior lights are switched ON and powered.")]
+    [SerializeField, Min(0f)]
+    private float interiorLightsFuelConsumptionPerMinute = 0.1f;
+
+    [Tooltip("The generator is considered low on fuel below this percentage.")]
+    [SerializeField, Range(0f, 1f)]
+    private float generatorLowFuelThreshold = 0.25f;
+
+    [Header("Generator Runtime Information")]
+    [SerializeField]
+    private GeneratorController.GeneratorState currentGeneratorState;
+
+    [SerializeField]
+    private float currentGeneratorFuel;
+
+    [SerializeField]
+    private float currentGeneratorFuelPercentage;
+
+    [SerializeField]
+    private bool isGeneratorLowOnFuel;
+
+    [SerializeField]
+    private float currentGeneratorFuelConsumptionPerMinute;
+
+    // =========================================================
     // INTERIOR LIGHTS
     // =========================================================
 
     [Header("Interior Lights")]
     [SerializeField] private Light[] interiorLights;
+
+    [Header("Interior Lights Runtime Information")]
+    [SerializeField] private bool areInteriorLightsPowered;
 
     // =========================================================
     // RADIO POWER
@@ -84,11 +129,43 @@ public class LighthouseGameManager : MonoBehaviour
     // GAMEPLAY STATES
     // =========================================================
 
+    // These two states represent the player's switch/lever positions.
+    // They are intentionally retained during a generator power outage.
     public bool IsBeaconOn { get; private set; }
+
+    public bool IsBeaconPowered => isBeaconPowered;
 
     public int CurrentBeaconSpeedStep { get; private set; } = 3;
 
     public bool AreInteriorLightsOn { get; private set; }
+
+    public bool AreInteriorLightsPowered => areInteriorLightsPowered;
+
+    // Generator state and fuel information.
+    public GeneratorController.GeneratorState CurrentGeneratorState =>
+        currentGeneratorState;
+
+    public bool IsGeneratorRunning =>
+        currentGeneratorState == GeneratorController.GeneratorState.Running;
+
+    public float CurrentGeneratorFuel => currentGeneratorFuel;
+
+    public float GeneratorFuelCapacity { get; private set; }
+
+    /// <summary>
+    /// Normalized fuel percentage, from 0 to 1.
+    /// Multiply by 100 to get a percentage from 0 to 100.
+    /// </summary>
+    public float GeneratorFuelPercentage => currentGeneratorFuelPercentage;
+
+    public bool IsGeneratorLowOnFuel => isGeneratorLowOnFuel;
+
+    /// <summary>
+    /// Total current fuel consumption, including generator idle consumption
+    /// and all equipment currently powered by the generator.
+    /// </summary>
+    public float GeneratorFuelConsumptionPerMinute =>
+        currentGeneratorFuelConsumptionPerMinute;
 
     public bool IsRadioOn { get; private set; }
 
@@ -150,10 +227,21 @@ public class LighthouseGameManager : MonoBehaviour
     // EVENTS
     // =========================================================
 
+    // These events report the player's requested switch/lever states.
     public event Action<bool> BeaconPowerChanged;
     public event Action<int> BeaconSpeedChanged;
     public event Action<bool> InteriorLightsChanged;
+
+    // These events report whether the equipment is actually receiving power.
+    public event Action<bool> BeaconPoweredChanged;
+    public event Action<bool> InteriorLightsPoweredChanged;
+
     public event Action FoghornTriggered;
+
+    // Generator events forwarded from GeneratorController.
+    public event Action<GeneratorController.GeneratorState> GeneratorStateChanged;
+    public event Action<float, float> GeneratorFuelChanged;
+    public event Action<bool> GeneratorLowFuelChanged;
 
     public event Action<bool> RadioPowerChanged;
     public event Action<int> RadioFrequencyChanged;
@@ -184,12 +272,19 @@ public class LighthouseGameManager : MonoBehaviour
 
     private void Start()
     {
+        // Initialize generator tracking before the other gameplay systems.
+        InitializeGeneratorTracking();
+
         // Beacon startup configuration.
         ApplyBeaconSpeedStep(beaconSpeedStartsAt, false);
         ApplyBeaconState(beaconStartsOn, false);
 
-        // Interior lights always start ON.
+        // Interior lights always start ON as a requested switch state.
+        // They only illuminate when the generator is actually running.
         ApplyInteriorLights(true, false);
+
+        // Recalculate the total load after all startup switch states are applied.
+        RecalculateGeneratorFuelConsumption();
 
         // Radio startup configuration.
         ApplyRadioFrequency(radioFrequencyStartsAt, false);
@@ -205,10 +300,185 @@ public class LighthouseGameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        UpdateGeneratorFuelConsumption();
+    }
+
     private void OnDestroy()
     {
+        // Unsubscribe from generator events to avoid stale event subscriptions.
+        if (generatorController != null)
+        {
+            generatorController.StateChanged -= HandleGeneratorStateChanged;
+            generatorController.FuelChanged -= HandleGeneratorFuelChanged;
+        }
+
         if (Instance == this)
             Instance = null;
+    }
+
+    // =========================================================
+    // GENERATOR INITIALIZATION
+    // =========================================================
+
+    private void InitializeGeneratorTracking()
+    {
+        if (generatorController == null)
+        {
+            Debug.LogWarning(
+                "[GameManager] GeneratorController reference is missing! " +
+                "Generator tracking and fuel consumption are disabled.",
+                this
+            );
+
+            return;
+        }
+
+        // Subscribe to the generator's C# events.
+        generatorController.StateChanged += HandleGeneratorStateChanged;
+        generatorController.FuelChanged += HandleGeneratorFuelChanged;
+
+        // Read the initial values. GeneratorController initializes its fuel
+        // and state in Awake(), so these values are ready by this point.
+        currentGeneratorState = generatorController.CurrentState;
+        currentGeneratorFuel = generatorController.CurrentFuel;
+        GeneratorFuelCapacity = generatorController.FuelCapacity;
+
+        currentGeneratorFuelPercentage = GeneratorFuelCapacity > 0f
+            ? Mathf.Clamp01(currentGeneratorFuel / GeneratorFuelCapacity)
+            : 0f;
+
+        // Establish the initial low-fuel status without firing an event.
+        isGeneratorLowOnFuel =
+            currentGeneratorFuelPercentage < generatorLowFuelThreshold;
+
+        if (enableDebugLogs)
+        {
+            Debug.Log(
+                $"[GameManager] Generator tracking initialized. " +
+                $"State: {currentGeneratorState}. " +
+                $"Fuel: {currentGeneratorFuel:F1}/{GeneratorFuelCapacity:F1} L. " +
+                $"Low fuel: {isGeneratorLowOnFuel}.",
+                this
+            );
+        }
+    }
+
+    // =========================================================
+    // GENERATOR EVENT HANDLERS
+    // =========================================================
+
+    private void HandleGeneratorStateChanged(
+        GeneratorController.GeneratorState newState)
+    {
+        currentGeneratorState = newState;
+
+        // The switch states remain unchanged. Only the actual power supplied
+        // to the beacon and interior lights changes with generator availability.
+        ApplyGeneratorPowerToConsumers();
+        RecalculateGeneratorFuelConsumption();
+
+        GeneratorStateChanged?.Invoke(newState);
+
+        if (enableDebugLogs)
+        {
+            Debug.Log(
+                $"[GameManager] Generator state updated: {newState}.",
+                this
+            );
+        }
+    }
+
+    private void HandleGeneratorFuelChanged(
+        float currentFuel,
+        float fuelCapacity)
+    {
+        bool wasLowOnFuel = isGeneratorLowOnFuel;
+
+        currentGeneratorFuel = currentFuel;
+        GeneratorFuelCapacity = fuelCapacity;
+
+        currentGeneratorFuelPercentage = fuelCapacity > 0f
+            ? Mathf.Clamp01(currentFuel / fuelCapacity)
+            : 0f;
+
+        isGeneratorLowOnFuel =
+            currentGeneratorFuelPercentage < generatorLowFuelThreshold;
+
+        // Forward the fuel update to any other interested gameplay systems.
+        GeneratorFuelChanged?.Invoke(currentFuel, fuelCapacity);
+
+        // Only notify listeners when crossing the low-fuel threshold.
+        if (wasLowOnFuel != isGeneratorLowOnFuel)
+        {
+            GeneratorLowFuelChanged?.Invoke(isGeneratorLowOnFuel);
+
+            if (enableDebugLogs)
+            {
+                Debug.Log(
+                    $"[GameManager] Generator low-fuel status changed to " +
+                    $"{isGeneratorLowOnFuel}. " +
+                    $"Fuel: {currentGeneratorFuelPercentage * 100f:F1}%.",
+                    this
+                );
+            }
+        }
+    }
+
+    // =========================================================
+    // GENERATOR FUEL CONSUMPTION
+    // =========================================================
+
+    private void UpdateGeneratorFuelConsumption()
+    {
+        if (generatorController == null ||
+            !generatorController.IsRunning ||
+            currentGeneratorFuelConsumptionPerMinute <= 0f)
+        {
+            return;
+        }
+
+        // Convert the current combined load from litres/minute to the amount
+        // used during this frame. The rate is recalculated whenever a load
+        // or the generator state changes.
+        float fuelToConsume =
+            currentGeneratorFuelConsumptionPerMinute / 60f * Time.deltaTime;
+
+        generatorController.ConsumeFuel(fuelToConsume);
+    }
+
+    private void RecalculateGeneratorFuelConsumption()
+    {
+        float totalConsumption = 0f;
+
+        // A running generator consumes some fuel even with no equipment on.
+        if (IsGeneratorRunning)
+        {
+            totalConsumption += generatorIdleFuelConsumptionPerMinute;
+
+            if (isBeaconPowered)
+                totalConsumption += beaconFuelConsumptionPerMinute;
+
+            if (areInteriorLightsPowered)
+                totalConsumption += interiorLightsFuelConsumptionPerMinute;
+        }
+
+        bool consumptionChanged = !Mathf.Approximately(
+            currentGeneratorFuelConsumptionPerMinute,
+            totalConsumption
+        );
+
+        currentGeneratorFuelConsumptionPerMinute = totalConsumption;
+
+        if (consumptionChanged && enableDebugLogs)
+        {
+            Debug.Log(
+                $"[GameManager] Total generator fuel consumption: " +
+                $"{currentGeneratorFuelConsumptionPerMinute:F3} L/min.",
+                this
+            );
+        }
     }
 
     // =========================================================
@@ -234,19 +504,11 @@ public class LighthouseGameManager : MonoBehaviour
     {
         bool stateChanged = IsBeaconOn != powered;
 
+        // Remember the physical key-switch position, even without generator power.
         IsBeaconOn = powered;
 
-        if (lighthouseBeacon != null)
-        {
-            lighthouseBeacon.SetPowered(powered);
-        }
-        else
-        {
-            Debug.LogError(
-                "[GameManager] LighthouseBeacon reference is missing!",
-                this
-            );
-        }
+        ApplyBeaconOutputPower();
+        RecalculateGeneratorFuelConsumption();
 
         if (notify && stateChanged)
             BeaconPowerChanged?.Invoke(powered);
@@ -254,9 +516,46 @@ public class LighthouseGameManager : MonoBehaviour
         if (enableDebugLogs)
         {
             Debug.Log(
-                $"[GameManager] Beacon is now {(powered ? "ON" : "OFF")}.",
+                $"[GameManager] Beacon switch is now {(powered ? "ON" : "OFF")}. " +
+                $"Actual power: {(isBeaconPowered ? "ON" : "OFF")}.",
                 this
             );
+        }
+    }
+
+    private void ApplyBeaconOutputPower()
+    {
+        bool shouldBePowered = IsBeaconOn && IsGeneratorRunning;
+        bool powerStateChanged = isBeaconPowered != shouldBePowered;
+
+        isBeaconPowered = shouldBePowered;
+
+        if (lighthouseBeacon != null)
+        {
+            // Apply even when the value has not changed, ensuring the component
+            // is synchronized during scene initialization as well.
+            lighthouseBeacon.SetPowered(shouldBePowered);
+        }
+        else if (IsBeaconOn)
+        {
+            Debug.LogError(
+                "[GameManager] LighthouseBeacon reference is missing!",
+                this
+            );
+        }
+
+        if (powerStateChanged)
+        {
+            BeaconPoweredChanged?.Invoke(isBeaconPowered);
+
+            if (enableDebugLogs)
+            {
+                Debug.Log(
+                    $"[GameManager] Beacon actual power is now " +
+                    $"{(isBeaconPowered ? "ON" : "OFF")}.",
+                    this
+                );
+            }
         }
     }
 
@@ -346,13 +645,11 @@ public class LighthouseGameManager : MonoBehaviour
     {
         bool stateChanged = AreInteriorLightsOn != powered;
 
+        // Remember the physical lever position during a generator outage.
         AreInteriorLightsOn = powered;
 
-        foreach (Light interiorLight in interiorLights)
-        {
-            if (interiorLight != null)
-                interiorLight.enabled = powered;
-        }
+        ApplyInteriorLightsOutputPower();
+        RecalculateGeneratorFuelConsumption();
 
         if (notify && stateChanged)
             InteriorLightsChanged?.Invoke(powered);
@@ -360,11 +657,49 @@ public class LighthouseGameManager : MonoBehaviour
         if (enableDebugLogs)
         {
             Debug.Log(
-                $"[GameManager] Interior lights are now " +
-                $"{(powered ? "ON" : "OFF")}.",
+                $"[GameManager] Interior light switch is now " +
+                $"{(powered ? "ON" : "OFF")}. " +
+                $"Actual power: {(areInteriorLightsPowered ? "ON" : "OFF")}.",
                 this
             );
         }
+    }
+
+    private void ApplyInteriorLightsOutputPower()
+    {
+        bool shouldBePowered = AreInteriorLightsOn && IsGeneratorRunning;
+        bool powerStateChanged = areInteriorLightsPowered != shouldBePowered;
+
+        areInteriorLightsPowered = shouldBePowered;
+
+        if (interiorLights != null)
+        {
+            foreach (Light interiorLight in interiorLights)
+            {
+                if (interiorLight != null)
+                    interiorLight.enabled = shouldBePowered;
+            }
+        }
+
+        if (powerStateChanged)
+        {
+            InteriorLightsPoweredChanged?.Invoke(areInteriorLightsPowered);
+
+            if (enableDebugLogs)
+            {
+                Debug.Log(
+                    $"[GameManager] Interior lights actual power is now " +
+                    $"{(areInteriorLightsPowered ? "ON" : "OFF")}.",
+                    this
+                );
+            }
+        }
+    }
+
+    private void ApplyGeneratorPowerToConsumers()
+    {
+        ApplyBeaconOutputPower();
+        ApplyInteriorLightsOutputPower();
     }
 
     // =========================================================
@@ -858,7 +1193,6 @@ public class LighthouseGameManager : MonoBehaviour
         }
     }
 
-
     private void QueueMockRadioMessages()
     {
         // MESSAGE 1 — Required frequency: 5
@@ -867,9 +1201,9 @@ public class LighthouseGameManager : MonoBehaviour
             5,
             new string[]
             {
-            "Proceed through the western channel.",
-            "Change course to the eastern channel.",
-            "Remain outside the channel until visibility improves."
+                "Proceed through the western channel.",
+                "Change course to the eastern channel.",
+                "Remain outside the channel until visibility improves."
             }
         );
 
@@ -879,9 +1213,9 @@ public class LighthouseGameManager : MonoBehaviour
             1,
             new string[]
             {
-            "Continue at reduced speed.",
-            "Turn around and use the northern route.",
-            "Proceed carefully. The southern passage is clear."
+                "Continue at reduced speed.",
+                "Turn around and use the northern route.",
+                "Proceed carefully. The southern passage is clear."
             }
         );
 
@@ -891,9 +1225,9 @@ public class LighthouseGameManager : MonoBehaviour
             3,
             new string[]
             {
-            "Beacon is operational.",
-            "Beacon is currently malfunctioning.",
-            "Unable to confirm beacon status."
+                "Beacon is operational.",
+                "Beacon is currently malfunctioning.",
+                "Unable to confirm beacon status."
             }
         );
 
@@ -905,5 +1239,4 @@ public class LighthouseGameManager : MonoBehaviour
             );
         }
     }
-
 }

@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 
@@ -59,6 +58,13 @@ public class GeneratorController : MonoBehaviour
         currentFuel < fuelCapacity;
 
     // =========================================================
+    // DISPLAY
+    // =========================================================
+
+    [Header("Display")]
+    [SerializeField] private LedDisplay ledDisplay;
+
+    // =========================================================
     // DEBUG
     // =========================================================
 
@@ -105,6 +111,8 @@ public class GeneratorController : MonoBehaviour
 
     private void Start()
     {
+        UpdateDisplay();
+
         if (enableDebugLogs)
         {
             Debug.Log(
@@ -127,7 +135,12 @@ public class GeneratorController : MonoBehaviour
         if (currentState == GeneratorState.Faulted)
         {
             if (enableDebugLogs)
-                Debug.LogWarning("[Generator] Cannot start: generator is faulted!", this);
+            {
+                Debug.LogWarning(
+                    "[Generator] Cannot start: generator is faulted!",
+                    this
+                );
+            }
 
             return;
         }
@@ -137,7 +150,12 @@ public class GeneratorController : MonoBehaviour
             ChangeState(GeneratorState.OutOfFuel);
 
             if (enableDebugLogs)
-                Debug.LogWarning("[Generator] Cannot start: no fuel!", this);
+            {
+                Debug.LogWarning(
+                    "[Generator] Cannot start: no fuel!",
+                    this
+                );
+            }
 
             return;
         }
@@ -184,6 +202,8 @@ public class GeneratorController : MonoBehaviour
 
         currentState = newState;
 
+        UpdateDisplay();
+
         StateChanged?.Invoke(currentState);
 
         if (enableDebugLogs)
@@ -192,6 +212,35 @@ public class GeneratorController : MonoBehaviour
                 $"[Generator] State changed to: {currentState}.",
                 this
             );
+        }
+    }
+
+    // =========================================================
+    // DISPLAY MANAGEMENT
+    // =========================================================
+
+    private void UpdateDisplay()
+    {
+        if (ledDisplay == null)
+            return;
+
+        switch (currentState)
+        {
+            case GeneratorState.Off:
+                ledDisplay.SetLines("GENERATOR", "OFF");
+                break;
+
+            case GeneratorState.Running:
+                ledDisplay.SetLines("GENERATOR", "RUNNING");
+                break;
+
+            case GeneratorState.OutOfFuel:
+                ledDisplay.SetLines("WARNING", "OUT OF FUEL");
+                break;
+
+            case GeneratorState.Faulted:
+                ledDisplay.SetLines("WARNING", "SYSTEM FAULT");
+                break;
         }
     }
 
@@ -260,6 +309,37 @@ public class GeneratorController : MonoBehaviour
         FuelChanged?.Invoke(currentFuel, fuelCapacity);
 
         return acceptedFuel;
+    }
+
+    // =========================================================
+    // FUEL CONSUMPTION
+    // =========================================================
+
+    public float ConsumeFuel(float amount)
+    {
+        // Fuel can only be consumed while the generator is running.
+        if (amount <= 0f ||
+            currentFuel <= 0f ||
+            currentState != GeneratorState.Running)
+        {
+            return 0f;
+        }
+
+        float consumedFuel = Mathf.Min(amount, currentFuel);
+
+        currentFuel -= consumedFuel;
+        currentFuel = Mathf.Max(0f, currentFuel);
+
+        // Notify listeners about the updated fuel amount.
+        FuelChanged?.Invoke(currentFuel, fuelCapacity);
+
+        // Automatically change state when the tank becomes empty.
+        if (currentFuel <= 0f)
+        {
+            ChangeState(GeneratorState.OutOfFuel);
+        }
+
+        return consumedFuel;
     }
 
     // =========================================================
